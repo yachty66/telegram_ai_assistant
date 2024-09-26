@@ -1,0 +1,2 @@
+- make a slash command /reminder and if this slash command is getting triggered the llm sends me a reminder about this 
+- if no reminder is set the conversation is just
