@@ -11,6 +11,8 @@ from telegram.ext import (
 from dotenv import load_dotenv
 import os
 from supabase import create_client, Client
+import tiktoken
+from ai import count_tokens_in_text, trim_to_last_tokens, llm_call
 
 # Load environment variables from .env file
 load_dotenv()
@@ -32,6 +34,7 @@ logger = logging.getLogger(__name__)
 
 # Define a function to handle messages
 async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    #this is called every time, i need to 
     chat_id = update.message.chat.id  # Get the chat_id
     message_text = update.message.text  # Get the message text
     user_id = update.message.from_user.id  # Get the user ID
@@ -53,12 +56,11 @@ async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     else:
         # User not found or no chat history, initialize an empty list
         chat_history = []
-
-    # Append user message to chat history
+    
     chat_history.append({"role": "user", "content": message_text})
 
     # Prepare the assistant's response (for demonstration, we just echo back)
-    assistant_response = "Okay"
+    assistant_response = llm_call(chat_history, message_text)
     chat_history.append({"role": "assistant", "content": assistant_response})
 
     # Update the chat history in Supabase
